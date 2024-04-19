@@ -1,5 +1,7 @@
+import "reflect-metadata";
 import express from "express";
 import { config } from "dotenv";
+import { AppDataSource } from "./data-source";
 
 config();
 
@@ -8,6 +10,10 @@ const port = process.env.PORT;
 
 app.use(express.json());
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  })
+  .catch((error) => console.log(error));
